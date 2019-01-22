@@ -1,0 +1,54 @@
+<div class="row">
+  <div class="col-md-12">
+    <h1>ブログ記事編集</h1>
+    <%= form_with model: @post, local: true do |form| %>
+      <div class="form-group">
+        <%= form.label "タイトル" %>
+        <%= form.text_field :title, class: "form-control" %>
+      </div>
+      <div class="form-group">
+        <%= form.label "カテゴリ" %>
+        <%= form.text_field :category, class: "form-control" %>
+      </div>
+      <div class="form-group">
+        <%= form.label "本文" %>
+        <%= form.text_area :body, class: "form-control" %>
+      </div>
+      <%= form.submit '更新する', class: "btn btn-primary" %>
+    <% end %>
+    <br>
+        <button id="btn" class="btn btn-secondary">音声認識ボタン(話しかけると下に認識した文章が出てくるのでコピーして貼り付けよう)</button>
+        <div id="content"></div>
+
+        <script>
+        const speech = new webkitSpeechRecognition();
+        speech.lang = 'ja-JP';
+
+        const btn = document.getElementById('btn');
+        const content = document.getElementById('content');
+
+        btn.addEventListener('click' , function() {
+        // 音声認識をスタート
+        speech.start();
+        });
+
+        //---------------追記---------------//
+        //音声自動文字起こし機能
+        speech.onresult = function(e) {
+            speech.stop();
+            if(e.results[0].isFinal){
+                var autotext =  e.results[0][0].transcript
+                console.log(e);
+                console.log(autotext);
+                content.innerHTML += '<div>'+ autotext +'</div>';
+              }
+        }
+        
+        speech.onend = () => { 
+            speech.start() 
+        };
+        //--------------------------------//
+
+        </script>
+  </div>
+</div>
